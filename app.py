@@ -20,10 +20,11 @@ app.config['SQLALCHEMY_DATABASE_URI']= os.getenv('DATABASE_URL')
 
 db.init_app(app)#---vinculacion de archivo models con mi aplicacion---#
 Migrate(app, db)  #---comandos que permiten gestionar mi base de datos recive estas dos instancias {app, y db}---#
-                    #---posee 3 comandos: flask db init; flask db migrate; flask deb upgrade---#
+#---posee 3 comandos: flask db init; flask db migrate; flask deb upgrade---#
 CORS(app) #--evita que en la aplicacion de front de error---#
-
 #---configuracion ruta inicial---#
+
+
 
 @app.route('/')
 def main():
@@ -35,36 +36,89 @@ def listar_todos():
     todos = list(map(lambda task: task.serialize(), todos))#--por cada tarea que consiga en todos, va a llamar a la funcions serialize()
     return jsonify(todos), 200
 
+#--------TRAER UNA TAREA--------------#
+@app.route('/todos/<int:id>', methods=['GET'])
+def get_task_by_id(id):
+    task = Task.query.get(id)
+    if not task:
+        return jsonify({"mensaje": "Task not faund"}), 404
+    return jsonify(task.serialize()), 200
+
+
+
+#--------TRAER UNA TAREA--------------#
+@app.route('/todos/search', methods=['GET'])
+def search_task():
+    s = request.args.get('s')
+    
+    # todos= Task.query.filter_by(done=s).all()
+    # todos= Task.query.filter(Task.id.in_([a,2,3,4,10])).all()
+    # todos= Task.query.filter(Task.id. >100).all()
+    # todos= Task.query.filter_by(done=False).all()
+    # investigar sobre el borrado logico en bases de dato
+    #
+    
+    todos = Task.query.filter(Task.label.like(f"%{s}%")).all()
+    todos = list(map(lambda task: task.serialize(), todos))
+    
+    return jsonify(todos), 200
+
+
+
+#--------CREAR los datos--------------#
 @app.route('/todos', methods=['POST'])
 def crear_task():
     body = request.get_json()
     
     task = Task()
-#--si hay done en el body, aplica linea45, si no, sigue de largo--# 
+#--si hay done en el body, aplica linea4 5, si no, sigue de largo--# 
     if 'done' in body:         
         task.label = body["label"]
     task.done = body["done"]
 
-#--------guardando los datos--------------
+#--------guardando los datos--------------#
     db.session.add(task)
     db.session.commit()
-#--------respuesta al usuario--------------
     
-    return jsonify(task.serialize()), 201 #--respuesta al usuario
+    return jsonify(task.serialize()), 200 
+    
+
+#--------actualizar los datos--------------#
+
+@app.route('/todos/<int:id>', methods=['PUT'])
+def update_task(id):
+    
+    body = request.get_json()
+    
+    task = Task.query.get(id)
+
+    if not task:
+        return jsonify({"mensaje": "Task not faund"}), 404
+            
+    task.label = body["label"]
+    
+    if 'done' in body:         
+        task.done = body["done"]
+
+    db.session.commit()
+    
+    return jsonify(task.serialize()), 200 #--respuesta al usuario
 
 
+#--------ELIMINAR los datos--------------#
+@app.route('/todos/<int:id>', methods=['DELETE'])
+def delete_task(id):
+        
+    task = Task.query.get(id)
 
+    if not task:
+        return jsonify({"mensaje": "Task not faund"}), 404
+            
 
-
-
-
-
-
-
-
-
-
-
+    db.session.delete(task)
+    db.session.commit()
+    
+    return jsonify({"Message": "Task deleted successfully"}), 200
 
 
 

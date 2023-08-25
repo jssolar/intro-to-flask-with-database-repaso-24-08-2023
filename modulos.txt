@@ -35,6 +35,11 @@ flask-sqlalchemy = "*"
 flask-cors = "*"
 flask-migrate = "*"
 
+bases de datos
+SQLAlchemy
+Postgresql
+psycopg2-binary
+
 [dev-packages]
 
 [requires]
@@ -49,6 +54,8 @@ importamos los modulos en app.py
 habilitar comando flask
 
 SET FLASK_APP=app.py
+-------------------------------
+pip list, lista las bibliotecar (package) que tengo instaladas-------------------------------
 -------------------------------
 
 ##inicializacion proyecto se ejecuta el sgte cmdo: python "app.py"
