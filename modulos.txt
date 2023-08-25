@@ -1,0 +1,57 @@
+librerias a usar
+
+
+    --flask
+    
+    --flask-slqalchemy
+    
+    --flask-cors ***maneja permisos, se puede, inclusi, bloquear url's que no queremos que visiten nuestra api
+    
+    --flask-migrate 
+        ***permite manejar todo lo referente a: migraciones(donde se confugura todos lo modelos que confuguramos en models.py)todo
+        lo concerniente a las tablas de bases de datos
+
+    --python-dotenv
+        ***permite leer variables de entorno (asegurar los datos de manera privada)
+    
+    --SQLite
+
+    ++en el archivo .env, vamos a configurar el nombre de la DB que usaremos, o contraseñas que queramos guardar( esta son las variables de entorno)
+
+    --archivo gitignore, usar gotignore.io
+
+
+------------------------------------
+    pipenv uninstall 
+
+    [[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-cors = "*"
+flask-migrate = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+
+--------------------------------
+
+una vez creado y configurado nuestro entorno virtual, comenzamos con el proyecto, 
+importamos los modulos en app.py
+--------------------------------
+--------------------------------
+habilitar comando flask
+
+SET FLASK_APP=app.py
+-------------------------------
+
+##inicializacion proyecto se ejecuta el sgte cmdo: python "app.py"
+-------------------------------
+si quiero cambiar de base de datos, se recomeinda:
+-para evitar problemas de migraciones, siempre que trabaje en equipo, no subir la carpeta "migrations al repositorio" porque al trabajar en equipos, esta carpeta se va a crear de acuerdo al OS que tenga mi compu. por lo tanto, agrego esta carpeta en mi gitignore  
